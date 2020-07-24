@@ -67,12 +67,12 @@ namespace FindPartner.API
             }
 
             //app.UseHttpsRedirection(); // This is HHTPS redrirection...
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyOrigin()); // Setting Middleware for Access Origin for ALL(*)
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); // Setting Middleware for Access Origin for ALL(*)
             
             //Dontnet Core 3.0 we need this UseAuthentication().
             // These method place here under UseCore(). Plase is very important.
             app.UseAuthentication(); 
-            //app.UseAuthorization();
+            
 
             app.UseRouting();
 
