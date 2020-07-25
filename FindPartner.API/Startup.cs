@@ -16,6 +16,10 @@ using FindPartner.API.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics;
+using System.Net;
+using FindPartner.API.Helpers;
 
 namespace FindPartner.API
 {
@@ -64,6 +68,23 @@ namespace FindPartner.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                // This is Production Model Globle Error Handling... Without giving details for front... security featuer...
+                app.UseExceptionHandler(builder => 
+                {
+                    builder.Run(async context => 
+                    {
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+                        if (error != null)
+                        {
+                            context.Response.AddApplicationError(error.Error.Message);
+                            await context.Response.WriteAsync(error.Error.Message);
+                        }
+                    });
+                });
             }
 
             //app.UseHttpsRedirection(); // This is HHTPS redrirection...
